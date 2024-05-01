@@ -1,6 +1,6 @@
-const express = require('express');
-const ProductManager = require('./ProductManager');
-const CartManager = require('./CartManager');
+import express from 'express';
+import ProductManager from './ProductManager';
+import CartManager from './CartManager';
 
 const app = express();
 const PORT = 8080;
@@ -11,23 +11,22 @@ const productManager = new ProductManager('products.json');
 const cartManager = new CartManager('carts.json');
 
 app.get('/', (req, res) => {
-    res.send('Bienvenido a la API de gestión de productos de café.');
-  });
+  res.send('Bienvenido a la API de gestión de productos de café.');
+});
 
-  app.get('/api/products', (req, res) => {
-    const products = productManager.getProducts();
-    const limit = parseInt(req.query.limit, 10);
-    if (!isNaN(limit) && limit > 0) {
-      res.json(products.slice(0, limit));
-    } else {
-      res.json(products);
-    }
-  });
-  
+app.get('/api/products', (req, res) => {
+  const products = productManager.getProducts();
+  const limit = parseInt(req.query.limit, 10);
+  if (!isNaN(limit) && limit > 0) {
+    res.json(products.slice(0, limit));
+  } else {
+    res.json(products);
+  }
+});
 
 app.get('/api/products/:id', (req, res) => {
   try {
-    const product = productManager.getProductById(parseInt(req.params.id));
+    const product = productManager.getProductsById(parseInt(req.params.id));
     res.json(product);
   } catch (error) {
     res.status(404).json({ error: 'Product not found' });
@@ -60,7 +59,6 @@ app.delete('/api/products/:id', (req, res) => {
     res.status(404).json({ error: 'Product not found' });
   }
 });
-
 
 app.post('/api/carts', (req, res) => {
   try {
