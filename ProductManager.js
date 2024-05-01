@@ -1,5 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Construct __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class ProductManager {
   constructor(filename) {
@@ -14,6 +20,7 @@ class ProductManager {
       this.products = parsedData.products || [];
       this.nextId = parsedData.nextId || 1;
     } catch (error) {
+      console.error('Failed to load products:', error);
       this.products = [];
       this.nextId = 1;
     }
@@ -38,7 +45,7 @@ class ProductManager {
       stock,
       category,
       thumbnails: [],
-      status: true 
+      status: true  // default status is true
     };
     this.products.push(product);
     this.saveProducts();
@@ -62,4 +69,4 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager;
+export default ProductManager;

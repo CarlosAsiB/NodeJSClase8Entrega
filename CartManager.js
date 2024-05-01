@@ -1,5 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Define __dirname in ES Module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class CartManager {
   constructor(filename) {
@@ -13,6 +19,7 @@ class CartManager {
       this.carts = JSON.parse(data).carts || [];
       this.nextId = JSON.parse(data).nextId || 1;
     } catch (error) {
+      console.error('Failed to load carts:', error);
       this.carts = [];
       this.nextId = 1;
     }
@@ -77,4 +84,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+export default CartManager;
