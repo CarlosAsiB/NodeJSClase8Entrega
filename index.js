@@ -1,101 +1,69 @@
+// Importing modules
 import express from 'express';
-import ProductManager from './ProductManager';
-import CartManager from './CartManager';
+import { Server } from 'http';
+import { engine } from 'express-handlebars';
+import socketIo from 'socket.io';
+import ProductManager from './ProductManager.js';
+import CartManager from './CartManager.js';
 
+// Instantiating the app and other components
 const app = express();
-const PORT = 8080;
-
-app.use(express.json());
-
+const server = new Server(app);
+const io = socketIo(server);
 const productManager = new ProductManager('products.json');
 const cartManager = new CartManager('carts.json');
 
+// Setting port number
+const PORT = 8080;
+
+// Setting up Handlebars
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+// Middleware to parse JSON and serve static files
+app.use(express.json());
+app.use(express.static('public'));
+
+// Home route
 app.get('/', (req, res) => {
-  res.send('Bienvenido a la API de gestión de productos de café.');
+  res.render('home', { products: productManager.getProducts() });
 });
 
-app.get('/api/products', (req, res) => {
-  const products = productManager.getProducts();
-  const limit = parseInt(req.query.limit, 10);
-  if (!isNaN(limit) && limit > 0) {
-    res.json(products.slice(0, limit));
-  } else {
-    res.json(products);
-  }
+// Real-time products view
+app.get('/realtimeproducts', (req, res) => {
+  res.render('realTimeProducts', { products: productManager.getProducts() });
 });
 
-app.get('/api/products/:id', (req, res) => {
-  try {
-    const product = productManager.getProductsById(parseInt(req.params.id));
-    res.json(product);
-  } catch (error) {
-    res.status(404).json({ error: 'Product not found' });
-  }
+// Socket.io connection
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('newProduct', (product) => {
+    productManager.addProduct(product);
+    io.emit('productAdded', productManager.getProducts());
+  });
+
+  socket.on('deleteProduct', (productId) => {
+    productManager.deleteProduct(productId);
+    io.emit('productUpdated', productManager.getProducts());
+  });
 });
 
+// API Routes for Products
 app.post('/api/products', (req, res) => {
-  try {
-    const product = productManager.addProduct(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ error: 'Error adding product' });
-  }
-});
-
-app.put('/api/products/:id', (req, res) => {
-  try {
-    const product = productManager.updateProduct(parseInt(req.params.id), req.body);
-    res.json(product);
-  } catch (error) {
-    res.status(404).json({ error: 'Product not found' });
-  }
+  const product = productManager.addProduct(req.body);
+  io.emit('productAdded', product); // Emit to update all clients
+  res.status(201).json(product);
 });
 
 app.delete('/api/products/:id', (req, res) => {
-  try {
-    productManager.deleteProduct(parseInt(req.params.id));
-    res.status(204).end();
-  } catch (error) {
-    res.status(404).json({ error: 'Product not found' });
-  }
+  productManager.deleteProduct(parseInt(req.params.id));
+  io.emit('productUpdated', productManager.getProducts()); // Emit to update all clients
+  res.status(204).send();
 });
 
-app.post('/api/carts', (req, res) => {
-  try {
-    const cart = cartManager.createCart();
-    res.status(201).json(cart);
-  } catch (error) {
-    res.status(500).json({ error: 'Error creating cart' });
-  }
-});
-
-app.delete('/api/carts/:id', (req, res) => {
-  try {
-    cartManager.deleteCart(parseInt(req.params.id));
-    res.status(204).end();
-  } catch (error) {
-    res.status(404).json({ error: 'Cart not found' });
-  }
-});
-
-app.get('/api/carts/:id', (req, res) => {
-  try {
-    const cart = cartManager.getCartById(parseInt(req.params.id));
-    res.json(cart);
-  } catch (error) {
-    res.status(404).json({ error: 'Cart not found' });
-  }
-});
-
-app.post('/api/carts/:id/products/:productId', (req, res) => {
-  try {
-    const cart = cartManager.addProductToCart(parseInt(req.params.id), parseInt(req.params.productId));
-    res.json(cart);
-  } catch (error) {
-    res.status(500).json({ error: 'Error adding product to cart' });
-  }
-});
-
-app.listen(PORT, () => {
+// Start server
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

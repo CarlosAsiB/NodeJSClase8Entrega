@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos en Tiempo Real</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const socket = io();
+
+            socket.on('productAdded', function(product) {
+                const productList = document.getElementById('productList');
+                productList.innerHTML += `<li>${product.title} - ${product.description}</li>`;
+            });
+
+            socket.on('productDeleted', function(productId) {
+                // Agregar lógica para eliminar productos de la lista en el cliente
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Productos en Tiempo Real</h1>
+    <ul id="productList">
+        {{#each products}}
+            <li>{{this.title}} - {{this.description}}</li>
+        {{/each}}
+    </ul>
+</body>
+</html>
