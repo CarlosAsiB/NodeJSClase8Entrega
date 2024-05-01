@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-// Construct __dirname in ES Modules
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -45,7 +45,7 @@ class ProductManager {
       stock,
       category,
       thumbnails: [],
-      status: true  // default status is true
+      status: true  
     };
     this.products.push(product);
     this.saveProducts();

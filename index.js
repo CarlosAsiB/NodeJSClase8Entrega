@@ -15,56 +15,56 @@ const cartManager = new CartManager('carts.json');
 const PORT = 8080;
  
 
-// Configure Handlebars as the view engine
+// Configurar Handlebars como el motor de vistas
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-// Middleware for parsing JSON and serving static files
+// Middleware para analizar JSON y servir archivos estáticos
 app.use(express.json());
 app.use(express.static('public'));
 
-// Home route that renders the home template with products
+// Ruta principal que renderiza la plantilla home con productos
 app.get('/', (req, res) => {
   res.render('home', { products: productManager.getProducts() });
 });
 
-// Real-time products view
+// Vista de productos en tiempo real
 app.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts', { products: productManager.getProducts() });
 });
 
-// Setup Socket.io connection
+// Configurar la conexión de Socket.io
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+  console.log('Un usuario conectado:', socket.id);
 
-  // Listen for new product addition from client and broadcast it
+  // Escuchar la adición de nuevos productos desde el cliente y transmitirlo
   socket.on('newProduct', (product) => {
     const newProduct = productManager.addProduct(product);
-    io.emit('productAdded', newProduct); // Broadcast new product to all clients
+    io.emit('productAdded', newProduct); // Transmitir el nuevo producto a todos los clientes
   });
 
-  // Listen for delete product request and broadcast the update
+  // Escuchar la solicitud de eliminación de productos y transmitir la actualización
   socket.on('deleteProduct', (productId) => {
     productManager.deleteProduct(productId);
-    io.emit('productUpdated', productManager.getProducts()); // Broadcast update to all clients
+    io.emit('productUpdated', productManager.getProducts()); // Transmitir actualización a todos los clientes
   });
 });
 
-// API Routes for Products
+// Rutas API para Productos
 app.post('/api/products', (req, res) => {
   const product = productManager.addProduct(req.body);
-  io.emit('productAdded', product); // Emit new product to all clients
+  io.emit('productAdded', product); // Emitir el nuevo producto a todos los clientes
   res.status(201).json(product);
 });
 
 app.delete('/api/products/:id', (req, res) => {
   productManager.deleteProduct(parseInt(req.params.id));
-  io.emit('productUpdated', productManager.getProducts()); // Emit update to all clients
+  io.emit('productUpdated', productManager.getProducts()); // Emitir actualización a todos los clientes
   res.status(204).end();
 });
 
-// Start the server
+// Iniciar el servidor
 httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
