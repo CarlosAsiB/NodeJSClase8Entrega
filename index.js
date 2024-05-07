@@ -2,8 +2,8 @@ import express from 'express';
 import { createServer } from 'http';
 import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
-import ProductManager from './ProductManager.js';
-import CartManager from './CartManager.js';
+import ProductManager from './managers/ProductManager.js';
+import CartManager from './managers/CartManager.js';
 
 const app = express();
 const httpServer = createServer(app);

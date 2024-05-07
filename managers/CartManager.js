@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 
 class CartManager {
   constructor(filename) {
-    this.filePath = path.join(__dirname, filename);
+    this.filePath = path.join(__dirname,'..', filename);
     this.loadCarts();
   }
 

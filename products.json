@@ -1,55 +1,55 @@
 {
-    "products": [
-      {
-        "id": 1,
-        "title": "Espresso",
-        "description": "Strong and full-flavored concentrated coffee.",
-        "code": "ESP001",
-        "price": 2.99,
-        "status": true,
-        "stock": 100,
-        "category": "Beverages"
-      },
-      {
-        "id": 2,
-        "title": "Cappuccino",
-        "description": "A balanced blend of rich espresso, steamed milk, and light foam.",
-        "code": "CAP002",
-        "price": 3.5,
-        "status": true,
-        "stock": 80,
-        "category": "Beverages"
-      },
-      {
-        "id": 3,
-        "title": "Latte",
-        "description": "Creamy espresso with a generous amount of steamed milk.",
-        "code": "LAT003",
-        "price": 3.95,
-        "status": true,
-        "stock": 90,
-        "category": "Beverages"
-      },
-      {
-        "id": 4,
-        "title": "Americano",
-        "description": "Espresso with hot water for a smooth and rich coffee.",
-        "code": "AME004",
-        "price": 2.5,
-        "status": true,
-        "stock": 100,
-        "category": "Beverages"
-      },
-      {
-        "id": 5,
-        "title": "Mocha",
-        "description": "Delicious dark chocolate with espresso and steamed milk.",
-        "code": "MOC005",
-        "price": 4.25,
-        "status": true,
-        "stock": 70,
-        "category": "Beverages"
-      }
-    ],
-    "nextId": 6
-  }
+  "products": [
+    {
+      "id": 1,
+      "title": "Espresso",
+      "description": "Strong and full-flavored concentrated coffee.",
+      "code": "ESP001",
+      "price": 2.99,
+      "status": true,
+      "stock": 100,
+      "category": "Beverages"
+    },
+    {
+      "id": 2,
+      "title": "Cappuccino",
+      "description": "A balanced blend of rich espresso, steamed milk, and light foam.",
+      "code": "CAP002",
+      "price": 3.5,
+      "status": true,
+      "stock": 80,
+      "category": "Beverages"
+    },
+    {
+      "id": 3,
+      "title": "Latte",
+      "description": "Creamy espresso with a generous amount of steamed milk.",
+      "code": "LAT003",
+      "price": 3.95,
+      "status": true,
+      "stock": 90,
+      "category": "Beverages"
+    },
+    {
+      "id": 4,
+      "title": "Americano",
+      "description": "Espresso with hot water for a smooth and rich coffee.",
+      "code": "AME004",
+      "price": 2.5,
+      "status": true,
+      "stock": 100,
+      "category": "Beverages"
+    },
+    {
+      "id": 5,
+      "title": "Mocha",
+      "description": "Delicious dark chocolate with espresso and steamed milk.",
+      "code": "MOC005",
+      "price": 4.25,
+      "status": true,
+      "stock": 70,
+      "category": "Beverages"
+    }
+  ],
+  "nextId": 8
+}
