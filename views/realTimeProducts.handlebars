@@ -7,16 +7,28 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const socket = io();
+
             
             socket.on('productAdded', function(product) {
                 const productList = document.getElementById('productList');
-                productList.innerHTML += `<li>${product.title} - ${product.description}</li>`;
+                productList.innerHTML += `<li id="product-${product.id}">${product.title} - ${product.description}</li>`;
             });
 
-            socket.on('productDeleted', function(productId) {
-                document.getElementById(`product-${productId}`).remove();
+         
+            socket.on('productUpdated', function(products) {
+                const productList = document.getElementById('productList');
+                productList.innerHTML = ''; 
+                products.forEach(product => {
+                    productList.innerHTML += `<li id="product-${product.id}">${product.title} - ${product.description}</li>`;
+                });
             });
-            
+
+          
+            socket.on('deleteError', function(data) {
+                alert(`Error: ${data.error} - No product found with ID ${data.id}`);
+            });
+
+        
             document.getElementById('addProductForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
@@ -25,12 +37,15 @@
                     product[key] = value;
                 });
                 socket.emit('newProduct', product);
+                this.reset();
             });
-            
+
+           
             document.getElementById('deleteProductForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const productId = document.getElementById('productIdToDelete').value;
                 socket.emit('deleteProduct', parseInt(productId));
+                document.getElementById('productIdToDelete').value = ''; 
             });
         });
     </script>
